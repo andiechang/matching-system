@@ -5,10 +5,25 @@ import (
 	"sync"
 )
 
+var (
+	instance *MemoryStore
+	once     sync.Once
+)
+
 // MemoryStore 為儲存單身人士資料的結構。
 type MemoryStore struct {
 	mu     sync.RWMutex
 	people map[string]*model.Person
+}
+
+// GetInstance 返回 MemoryStore 的單例實例。
+func GetInstance() *MemoryStore {
+	once.Do(func() {
+		instance = &MemoryStore{
+			people: make(map[string]*model.Person),
+		}
+	})
+	return instance
 }
 
 // NewMemoryStore 創建一個新的 MemoryStore 實例。

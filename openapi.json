@@ -1,0 +1,144 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tinder Match System API",
+        "version": "1.0.0",
+        "description": "API for managing and matching single people in a Tinder-like system."
+    },
+    "paths": {
+        "/add_single_person_and_match": {
+            "post": {
+                "summary": "Add a new single person and find any possible matches.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Person"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully added and matched.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddAndMatchResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/remove_single_person/{name}": {
+            "delete": {
+                "summary": "Remove a single person from the system.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully removed the person.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/query_single_people": {
+            "get": {
+                "summary": "Find the most N possible matched single people.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "n",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully found the top N matches.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Person"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Person": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "height",
+                    "gender",
+                    "numberOfDates"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "height": {
+                        "type": "integer"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "enum": [
+                            "male",
+                            "female"
+                        ]
+                    },
+                    "numberOfDates": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "AddAndMatchResponse": {
+                "type": "object",
+                "properties": {
+                    "person": {
+                        "$ref": "#/components/schemas/Person"
+                    },
+                    "matches": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Person"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

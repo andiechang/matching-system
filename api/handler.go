@@ -14,6 +14,7 @@ import (
 func AddSinglePersonAndMatch(c *gin.Context, memoryStore *store.MemoryStore) {
 	var newPerson model.Person
 	if err := c.BindJSON(&newPerson); err != nil {
+		utils.LogError(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -69,15 +70,16 @@ func QuerySinglePeople(c *gin.Context, memoryStore *store.MemoryStore) {
 	nStr := c.DefaultQuery("n", "10")
 	n, err := strconv.Atoi(nStr)
 	if err != nil {
+		utils.LogError(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid number"})
 		return
 	}
 
 	people := memoryStore.GetAllPeople()
 
-	// 這裡可以添加排序和選擇最適合的匹配邏輯
+	// TODO: 這裡可以添加排序和選擇最適合的匹配邏輯
 
-	// 簡化：僅返回前 n 個人
+	// 暫時簡化：僅返回前 n 個人
 	if n > len(people) {
 		n = len(people)
 	}
